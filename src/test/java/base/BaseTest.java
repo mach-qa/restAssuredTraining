@@ -3,19 +3,19 @@ package base;
 import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import providers.PropertiesFactory;
 
 public class BaseTest {
     private static PropertiesFactory propertiesFactory;
     private static RequestSpecification requestSpecification;
-    public static final String BASE_WEATHER_URL = System.getProperty("weatherPageEndpoint");
-
-    private static Logger log = LoggerFactory.getLogger(BaseTest.class);
+    private static ResponseSpecification responseSpecification;
+    public final String BASE_WEATHER_URL = System.getProperty("baseWeatherURL");
+    public final String WEATHER_DATA_PATH = System.getProperty("weatherDataEndpoint");
 
     @BeforeAll
     public static void setup() {
@@ -23,10 +23,17 @@ public class BaseTest {
         RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
-    // TODO poprawić tak aby pasowało pod weatherTest
-    @BeforeEach
-    protected void setupRequestSpecification() {
-        requestSpecification = RestAssured.given()
-                .baseUri(BASE_WEATHER_URL);
+    protected RequestSpecification setupRequestSpecification() {
+        return requestSpecification = RestAssured.given()
+                .baseUri(BASE_WEATHER_URL + WEATHER_DATA_PATH)
+                .param("appid", System.getProperty("appId"))
+                .contentType(ContentType.JSON);
+    }
+
+    protected ResponseSpecification setupResponseSpecification() {
+        return responseSpecification = RestAssured.expect()
+                .contentType(ContentType.JSON)
+                .statusCode(200)
+                .time(Matchers.lessThan(5000L));
     }
 }

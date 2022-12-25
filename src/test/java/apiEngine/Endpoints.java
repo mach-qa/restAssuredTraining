@@ -1,6 +1,5 @@
 package apiEngine;
 
-
 public class Endpoints {
 
     public String getBaseUri() {

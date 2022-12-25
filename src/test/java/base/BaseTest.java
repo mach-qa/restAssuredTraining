@@ -25,7 +25,7 @@ public class BaseTest {
 
     protected RequestSpecification setupRequestSpecification() {
         return requestSpecification = RestAssured.given()
-                .baseUri(BASE_WEATHER_URL + WEATHER_DATA_PATH)
+                .baseUri(BASE_WEATHER_URL)
                 .param("appid", System.getProperty("appId"))
                 .contentType(ContentType.JSON);
     }

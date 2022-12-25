@@ -21,13 +21,13 @@ public class WeatherTest extends BaseTest {
     void shouldGETWeatherBasedOnLocation(String city, String country, int id, String expectedCity ) {
 
         given()
-                .spec(setupRequestSpecification())
-                .basePath(WEATHER_DATA_PATH)
+                .spec(specifications.setupRequestSpecification())
+                .basePath(endpoints.getWeatherEndpoint())
                 .param("q", city + "," + country).
         when()
                 .get().
         then()
-                .spec(setupResponseSpecification())
+                .spec(specifications.setupResponseSpecification())
                 .assertThat()
                 .body("name", equalTo(expectedCity))
                 .body("id", equalTo(id));
